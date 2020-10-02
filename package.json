@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "axios": "^0.20.0",
+    "compression-webpack-plugin": "^6.0.2",
+    "js-cookie": "^2.2.1",
+    "vue-router": "^3.4.5",
+    "vuex": "^3.5.1"
+  }
+}
