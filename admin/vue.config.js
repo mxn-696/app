@@ -42,7 +42,7 @@ module.exports = {
       // detail: https://cli.vuejs.org/config/#devserver-proxy
       [process.env.VUE_APP_BASE_API]: {
         // target: `http://test.xxx.com`,  // 跨域代理  开发环境   test.xxx.com
-        target: `http://192.168.15.16:5000`,  // 生产环境       xxx.com
+        target: `http://127.0.0.1:3000`,  // 生产环境       xxx.com
         // target: `http://127.0.0.1:8888/test/`,  // 开发环境
         changeOrigin: true,
         pathRewrite: {

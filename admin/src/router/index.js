@@ -7,10 +7,10 @@ Vue.use(Router)
 import Layout from '@/layout'
 
 /* Router Modules */
-import componentsRouter from './modules/components'
-import chartsRouter from './modules/charts'
-import tableRouter from './modules/table'
-import nestedRouter from './modules/nested'
+// import componentsRouter from './modules/components'
+// import chartsRouter from './modules/charts'
+// import tableRouter from './modules/table'
+// import nestedRouter from './modules/nested'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -184,46 +184,69 @@ export const asyncRoutes = [
     ]
   },
 
-    
+  // {
+  //   path: '/fruit',
+  //   component: Layout,
+  //   redirect: '/fruit/list',
+  //   name: 'Fruti',
+  //   meta: {
+  //     title: '生鲜',
+  //     icon: 'el-icon-s-help'
+  //   },
+  //   children: [
+  //     {
+  //       path: 'add',
+  //       component: () => import('@/views/fruit/add'),
+  //       name: 'Addfruit',
+  //       meta: { title: '添加', icon: 'edit' }
+  //     },
+  //     {
+  //       path: 'edit/:id',
+  //       component: () => import('@/views/fruit/edit'),
+  //       name: 'Editfruit',
+  //       meta: { title: '修改', noCache: true, activeMenu: '/fruit/list' },
+  //       hidden: true
+  //     },
+  //     {
+  //       path: 'list',
+  //       component: () => import('@/views/fruit/list'),
+  //       name: 'fruitList',
+  //       meta: { title: '生鲜',noCache: true, icon: 'list' }
+  //     }
+  //   ]
+  // },
 
-    {
-      path: '/fruit',
-      component: Layout,
-      redirect: '/fruit/list',
-      name: 'Fruti',
-      meta: {
-        title: '生鲜',
-        icon: 'el-icon-s-help'
-      },
-      children: [
-        {
-          path: 'add',
-          component: () => import('@/views/fruit/add'),
-          name: 'Addfruit',
-          meta: { title: '添加', icon: 'edit' }
-        },
-        {
-          path: 'edit/:id',
-          component: () => import('@/views/fruit/edit'),
-          name: 'Editfruit',
-          meta: { title: '修改', noCache: true, activeMenu: '/fruit/list' },
-          hidden: true
-        },
-        {
-          path: 'list',
-          component: () => import('@/views/fruit/list'),
-          name: 'fruitList',
-          meta: { title: '生鲜',noCache: true, icon: 'list' }
-        }
-      ]
+  {
+    path: '/shop',
+    component: Layout,
+    redirect: '/shop/list',
+    name: 'Shop',
+    meta: {
+      title: '小米商城',
+      icon: 'el-icon-s-help'
     },
-
-
-
-
-
-
-
+    children: [
+      {
+        path: 'add',
+        component: () => import('@/views/mi/add'),
+        name: 'Addshop',
+        meta: { title: '添加', icon: 'edit' }
+      },
+      {
+        path: 'edit/:id',
+        component: () => import('@/views/mi/edit'),
+        name: 'Editshop',
+        meta: { title: '修改', noCache: true, activeMenu: '/mi/list' },
+        hidden: true
+      },
+      {
+        path: 'list',
+        component: () => import('@/views/mi/list'),
+        name: 'shopList',
+        meta: { title: '商品列表', noCache: true, icon: 'list' }
+      }
+    ]
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
