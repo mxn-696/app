@@ -46,7 +46,7 @@ export default {
                 flex: 1;
                 background: white;
                 text-align: center;
-                line-height: 40px;
+                line-height: 0.4rem;
                 color: #333;
                 &.active{
                     background: red;

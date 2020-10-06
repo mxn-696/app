@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <router-view></router-view>
-    <Footer></Footer>
+    <Footer v-show='$route.meta.showFooter==undefined'></Footer>
     
   </div>
 </template>
@@ -19,6 +19,12 @@ export default {
 html,body{
     height: 100%;
 }
+html{
+    font-size: 26.667vw;
+}
+body{
+  font-size: 0.16rem;
+}
 #app{
   display: flex;
   flex-direction: column;
@@ -28,7 +34,7 @@ html,body{
     overflow-y: auto;
   }
   #footer{
-    height: 40px;
+    height: 0.4rem;
   }
 }
 

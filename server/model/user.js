@@ -6,6 +6,7 @@ const Schema=mongoose.Schema;
 const userSchema=new Schema({
     username:String,
     password:String,
+    imgUrl:String
     // car:{
     //     type:mongoose.SchemaTypes.ObjectId,
     //     ref:'Car'

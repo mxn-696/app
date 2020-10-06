@@ -189,8 +189,21 @@ app.put('/shop/putshop', (req, res) => {
 
 //前台
 
+//获取全部分类
+app.get('/kind/getkind', (req, res) => {
+  Kind.find().then(mon => {
+    if (mon) {
+      res.json({
+        code: 200,
+        Kindlist: mon
+      })
+    }
+  })
+})
+
+
 //获取全部商品信息
-app.get('/main/all', (req, res) => {
+app.get('/kind/all', (req, res) => {
   Shop.find().populate('kind').exec(function (err, doc) {
     if (err) {
       console.log(err)
@@ -218,10 +231,23 @@ app.get('/main/getthis/:id', (req, res) => {
   })
 })
 
+//上传用户头像
+app.post('/login/upload', upload.single('avatar'), function (req, res, next) {
+  if (req.file) {
+    res.json({
+      code: 200,
+      imgUrl: req.file.path
+    })
+  }
+})
+
+
+
 
 
 //注册
 app.post('/mine/zhuce', (req, res) => {
+  console.log(req.body)
   User.find({
     username: req.body.username,
   }).then(mon => {
@@ -229,7 +255,8 @@ app.post('/mine/zhuce', (req, res) => {
     if (mon == "") {
       var user = new User({
         username: req.body.username,
-        password: req.body.password
+        password: req.body.password,
+        imgUrl: req.body.imgUrl
       })
       user.save().then(aaa => {
         if (aaa) {
@@ -287,69 +314,112 @@ app.post('/mine/login', (req, res) => {
     }
   })
 })
-
+app.get('/mine/gettouxiang', (req, res) => {
+  User.findOne({
+    username: req.query.username
+  }).then(mon => {
+    if (mon) {
+      res.json({
+        code: 200,
+        list: mon
+      })
+    }
+  })
+})
 
 //添加收货地址接口
-app.post('/mine/addads',(req,res)=>{
-  Ads.updateOne({username:req.body.username},{
-    $push:{
-      list:{
-        id:req.body.obj.id,
-        addressDetail:req.obj.addressDetail,
-        areaCode:req.body.obj.areaCode,
-        city:req.body.obj.city,
-        country:req.body.obj.country,
-        county:req.body.obj.county,
-        isDefault:req.body.obj.isDefault,
-        postalCode:req.body.obj.postalCode,
-        tel:req.body.obj.tel,
-        province:req.body.obj.province,
+app.post('/mine/addads', (req, res) => {
+  Ads.updateOne({
+    username: req.body.username
+  }, {
+    $push: {
+      list: {
+        id: req.body.obj.id,
+        name: req.body.obj.name,
+        addressDetail: req.body.obj.addressDetail,
+        areaCode: req.body.obj.areaCode,
+        city: req.body.obj.city,
+        country: req.body.obj.country,
+        county: req.body.obj.county,
+        isDefault: req.body.obj.isDefault,
+        postalCode: req.body.obj.postalCode,
+        tel: req.body.obj.tel,
+        province: req.body.obj.province,
       }
     }
   }, function (err, res) {
     if (err) {
       return console.log(err)
     }
-  }).then(mon=>{
+  }).then(mon => {
     res.json({
-      code:200,
-      msg:'数据添加成功'
+      code: 200,
+      msg: '数据添加成功'
     })
   })
 })
 
+//获取当前收货地址
+app.get('/mine/getthisads',(req,res)=>{
+  // console.log(req.query)
+  Ads.findOne({
+    username:req.query.username
+  }).then(mon=>{
+    // console.log(mon.list)
+    var data={}
+    for(var i =0;i<mon.list.length;i+=2){
+      if(mon.list[i].id==Number(req.query.id)){
+        data=mon.list[i]
+      }
+    }
+    res.json({
+      code:200,
+      data
+    })
+  })
+})
+
+
 //修改收货地址接口
-app.put('/mine/putads',(req,res)=>{
+app.put('/mine/putads', (req, res) => {
   Ads.updateOne({
-    username:req.body.username,
-    'list.id':req.body.obj.id
-  },{
-    $set:{
-      'list.$':{
-        id:req.body.obj.id,
-        name:req.body.obj.name,
-        tel:req.body.obj.tel,
-        address:req.body.obj.address,
+    username: req.body.username,
+    'list.id': req.body.obj.id
+  }, {
+    $set: {
+      'list.$': {
+        id: req.body.obj.id,
+        name: req.body.obj.name,
+        addressDetail: req.body.obj.addressDetail,
+        areaCode: req.body.obj.areaCode,
+        city: req.body.obj.city,
+        country: req.body.obj.country,
+        county: req.body.obj.county,
+        isDefault: req.body.obj.isDefault,
+        postalCode: req.body.obj.postalCode,
+        tel: req.body.obj.tel,
+        province: req.body.obj.province,
       }
     }
   }, function (err, res) {
     if (err) {
       return
     }
-  }).then(mon=>{
-      res.json({
-      code:200,
-      msg:'地址修改成功'
+  }).then(mon => {
+    res.json({
+      code: 200,
+      msg: '地址修改成功'
     })
   })
 })
 
 
 //删除收货地址
-app.delete('/mine/delads',(req,res)=>{
+app.delete('/mine/delads', (req, res) => {
+  console.log(req.query)
   Ads.updateOne({
-    username:req.query.username,
-  },{
+    username: req.query.username,
+  }, {
     $pull: {
       list: {
         id: req.query.id
@@ -359,24 +429,26 @@ app.delete('/mine/delads',(req,res)=>{
     if (err) {
       return
     }
-   
-  }).then(mon=>{
-     res.json({
-      code:200,
-      msg:'地址删除成功'
+
+  }).then(mon => {
+    res.json({
+      code: 200,
+      msg: '地址删除成功'
     })
   })
 })
 
 
 //获取用户全部收货地址
-app.get('/mine/allads',async(req,res)=>{
+app.get('/mine/allads',(req, res) => {
   // console.log(req.query)
-  Ads.findOne({username:req.query.username}).then(mon=>{
-    console.log(mon.list)
+  Ads.findOne({
+    username: req.query.username
+  }).then(mon => {
+    // console.log(mon)
     res.json({
-      code:200,
-      list:mon.list
+      code: 200,
+      list: mon.list
     })
   })
 })
@@ -413,10 +485,10 @@ app.post('/shopping/add', (req, res) => {
         if (err) {
           return
         }
-      }).then(mon=>{
-          res.json({
-          code:200,
-          msg:'购物车添加成功'
+      }).then(mon => {
+        res.json({
+          code: 200,
+          msg: '购物车添加成功'
         })
       })
     } else {
@@ -436,11 +508,11 @@ app.post('/shopping/add', (req, res) => {
           if (err) {
             return console.log(err)
           }
-         
-        }).then(mon=>{
-           res.json({
-            code:200,
-            msg:'数据修改成功'
+
+        }).then(mon => {
+          res.json({
+            code: 200,
+            msg: '数据修改成功'
           })
         })
       } else {
@@ -457,11 +529,11 @@ app.post('/shopping/add', (req, res) => {
           if (err) {
             return console.log(err)
           }
-         
-        }).then(mon=>{
-           res.json({
-            code:200,
-            msg:'数据删除成功'
+
+        }).then(mon => {
+          res.json({
+            code: 200,
+            msg: '数据删除成功'
           })
         })
       }
@@ -471,18 +543,20 @@ app.post('/shopping/add', (req, res) => {
 
 
 //获取购物车列表
-app.get('/shopping/getlist',(req,res)=>{
+app.get('/shopping/getlist', (req, res) => {
   console.log(req.query.username)
-  Car.findOne({username:req.query.username}).then(mon=>{
-    var list=[]
-    for(var i=0;i<mon.list.length;i++){
-      shop.findById(mon.list[i].id).then(aaa=>{
+  Car.findOne({
+    username: req.query.username
+  }).then(mon => {
+    var list = []
+    for (var i = 0; i < mon.list.length; i++) {
+      shop.findById(mon.list[i].id).then(aaa => {
         list.push(aaa)
       })
     }
     res.json({
-      code:200,
-      list:list
+      code: 200,
+      list: list
     })
   })
 })
