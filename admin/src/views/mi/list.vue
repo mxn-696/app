@@ -9,7 +9,7 @@
           <el-table-column prop="price" label="商品价格" />
           <el-table-column prop="imgUrl" label="图片">
             <template slot-scope="scope">
-              <img :src="scope.row.imgUrl">
+              <img :src="scope.row.imgUrl[0]">
             </template>
           </el-table-column>
           <el-table-column label="操作">
@@ -56,11 +56,13 @@ export default {
         pagesize,
         currentpage
       }).then((res) => {
+        console.log(res)
         if (res.list.length === 0) {
           this.currentpage--
           this.getlist(this.pagesize, this.currentpage)
         }
         this.tableData = res.list
+        console.log(this.tableData)
         this.total = res.total
       })
     },

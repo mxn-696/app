@@ -5,7 +5,7 @@ const Schema=mongoose.Schema;
 
 const frutiSchema=new Schema({
     name:String, 
-    imgUrl:String,
+    imgUrl:Array,
     titile:String,
     price:String,
     detial:String,
@@ -17,7 +17,7 @@ const frutiSchema=new Schema({
 });
 
 
-const Fruit = mongoose.model('Fruit', frutiSchema, 'fruit');
+const Shop = mongoose.model('Shop', frutiSchema, 'shop');
 
 
-module.exports=Fruit;
+module.exports=Shop;

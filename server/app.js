@@ -83,6 +83,7 @@ app.get('/shop/getkind', (req, res) => {
 
 //上传图片
 app.post('/shop/upload', upload.single('avatar'), function (req, res, next) {
+  console.log(req.file)
   if (req.file) {
     res.json({
       code: 20000,
@@ -422,7 +423,7 @@ app.delete('/mine/delads', (req, res) => {
   }, {
     $pull: {
       list: {
-        id: req.query.id
+        id: Number(req.query.id) 
       }
     }
   }, function (err, res) {
@@ -431,10 +432,13 @@ app.delete('/mine/delads', (req, res) => {
     }
 
   }).then(mon => {
-    res.json({
+    if(mon){
+        res.json({
       code: 200,
       msg: '地址删除成功'
     })
+    }
+  
   })
 })
 

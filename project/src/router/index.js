@@ -12,8 +12,30 @@ const router = new VueRouter({
         },
         {
             path: '/home',
-            name: 'Home',
-            component: () => import('@/views/home/index.vue')
+            redirect: "/home/tuijian",
+            component: () =>
+                import ("../views/home/index.vue"),
+            children: [{
+                    path: "tuijian",
+                    name: "Tuijian",
+                    component: () =>
+                        import ("../views/home/tuijian")
+                },
+
+                {
+                    path: "xiaomishouji",
+                    name: "Xiaomishouji",
+                    component: () =>
+                        import ("../views/home/xiaomishouji"),
+                },
+                {
+                    path: "hongmi",
+                    name: "Hongmi",
+                    component: () =>
+                        import ("../views/home/hongmi"),
+                }
+            ]
+
         },
         {
             path: '/kind',
@@ -78,6 +100,22 @@ const router = new VueRouter({
                 }
             ]
         },
+        {
+            path:'/search',
+            name:'Search',
+            component:()=>import('@/views/search/index.vue'),
+            meta:{
+                showFooter:true
+            }
+        },
+        {
+            path:'/dail/:id',
+            name:'Dail',
+            component:()=>import('@/views/dail/index.vue'),
+            meta:{
+                showFooter:true
+            }
+        }
 
     ],
     linkActiveClass: 'active'
