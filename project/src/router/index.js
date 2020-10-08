@@ -29,10 +29,16 @@ const router = new VueRouter({
                         import ("../views/home/xiaomishouji"),
                 },
                 {
-                    path: "hongmi",
-                    name: "Hongmi",
+                    path: "dianshi",
+                    name: "Dianshi",
                     component: () =>
-                        import ("../views/home/hongmi"),
+                        import ("../views/home/dianshi"),
+                },
+                {
+                    path: "diannao",
+                    name: "Diannao",
+                    component: () =>
+                        import ("../views/home/diannao"),
                 }
             ]
 
@@ -45,7 +51,10 @@ const router = new VueRouter({
         {
             path: '/car',
             name: 'Car',
-            component: () => import('@/views/car/index.vue')
+            component: () => import('@/views/car/index.vue'),
+            meta:{
+                showFooter:true
+            }
         },
         {
             path: '/mine',

@@ -32,13 +32,13 @@
         <!-- 每日精选和超值推荐结束 -->
         <!-- 下面的列表 -->
         <ul class="list_ul">
-          <router-link  tag="li" :to="{ path: '/dail/5f7b0f7495260f2af8f92b1e'}" v-for="(item3,index) in list_ulList" :key="index" >
+          <router-link  tag="li" :to="{ path: '/dail/'+item3._id}" v-for="(item3,index) in list_ulList" :key="index" >
             <div class="one1">
-              <img :src="item3.imgurl" alt />
+              <img :src="item3.imgUrl" alt />
             </div>
             <div class="two2">
-              <div class="title">{{item3.title}}</div>
-              <div class="brief">{{item3.brief}}</div>
+              <div class="title">{{item3.name}}</div>
+              <div class="brief">{{item3.titile}}</div>
               <div class="price">{{item3.price}}</div>
             </div>
           </router-link>
@@ -83,36 +83,6 @@ export default {
           brief: "年轻人的酷玩具",
           price: "￥1999",
         },
-        {
-          imgurl: require("../../../assets/hongmi5.jpg"),
-          title: "九号平衡车",
-          brief: "年轻人的酷玩具",
-          price: "￥1999",
-        },
-        {
-          imgurl: require("../../../assets/hongmi5.jpg"),
-          title: "九号平衡车",
-          brief: "年轻人的酷玩具",
-          price: "￥1999",
-        },
-        {
-          imgurl: require("../../../assets/hongmi5.jpg"),
-          title: "九号平衡车",
-          brief: "年轻人的酷玩具",
-          price: "￥1999",
-        },
-        {
-          imgurl: require("../../../assets/hongmi5.jpg"),
-          title: "九号平衡车",
-          brief: "年轻人的酷玩具",
-          price: "￥1999",
-        },
-        {
-          imgurl: require("../../../assets/hongmi5.jpg"),
-          title: "九号平衡车",
-          brief: "年轻人的酷玩具",
-          price: "￥1999",
-        },
       ],
     };
   },
@@ -123,9 +93,26 @@ export default {
   //监控data中的数据变化
   watch: {},
   //方法集合
-  methods: {},
+  methods: {
+    getall(){
+      this.$http.get('/kind/all').then(res=>{
+        var list_ulList=[]
+        for(var i=0;i<res.list.length;i++){
+          if(res.list[i].kind.kind=='耳机'){
+            for(var j=0;j<10;j++){
+              list_ulList.push(res.list[i])
+            } 
+            res.list[i].imgUrl='http://127.0.0.1:3000/'+ res.list[i].imgUrl[0]
+          }
+        }
+        this.list_ulList=list_ulList
+      })
+    }
+  },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    this.getall()
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   beforeCreate() {}, //生命周期 - 创建之前

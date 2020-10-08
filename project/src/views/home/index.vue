@@ -24,11 +24,11 @@
           <ul>
             <router-link tag="li" to="/home/tuijian">推荐</router-link>
             <router-link tag="li" to="/home/xiaomishouji">小米</router-link>
-            <router-link tag="li" to="/home/hongmi">红米</router-link>
-            <router-link tag="li" to="/home/hongmi">电视</router-link>
-            <router-link tag="li" to="/home/hongmi">电脑</router-link>
-            <router-link tag="li" to="/home/hongmi">全面屏</router-link>
-            <router-link tag="li" to="/home/hongmi">生活周边</router-link>
+            <router-link tag="li" to="/home/dianshi">电视</router-link>
+            <router-link tag="li" to="/home/diannao">电脑</router-link>
+            <router-link tag="li" to="/home/diannao">电脑</router-link>
+            <router-link tag="li" to="/home/diannao">电脑</router-link>
+            <router-link tag="li" to="/home/diannao">电脑</router-link>
           </ul>
         </div>
         <router-view></router-view>

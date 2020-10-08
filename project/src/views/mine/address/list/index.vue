@@ -64,7 +64,7 @@ export default {
     },
     onClickLeft() {
       Toast("返回");
-      this.$router.go(-1);
+      this.$router.replace({path:'/mine/shezhi'});
     },
     onClickRight() {
       Toast("按钮");

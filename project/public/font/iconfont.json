@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "30509",
+      "name": "加",
+      "font_class": "jiajian02",
+      "unicode": "e626",
+      "unicode_decimal": 58918
+    },
+    {
       "icon_id": "584277",
       "name": "搜索",
       "font_class": "iconfontsousuo",
@@ -25,6 +32,13 @@
       "font_class": "chazhaobiaodanliebiao",
       "unicode": "e76a",
       "unicode_decimal": 59242
+    },
+    {
+      "icon_id": "1195398",
+      "name": "减",
+      "font_class": "jian",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
     },
     {
       "icon_id": "4144631",
@@ -53,6 +67,13 @@
       "font_class": "s3",
       "unicode": "e512",
       "unicode_decimal": 58642
+    },
+    {
+      "icon_id": "10315209",
+      "name": "垃圾桶",
+      "font_class": "_lajitong-xian",
+      "unicode": "e647",
+      "unicode_decimal": 58951
     },
     {
       "icon_id": "10392050",

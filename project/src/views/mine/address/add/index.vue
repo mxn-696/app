@@ -46,7 +46,6 @@ export default {
     },
     onSave(content) {
       Toast("save");
-      console.log(content)
       var obj={
         id:this.adslength,
         name:content.name,
@@ -60,12 +59,10 @@ export default {
         tel:content.tel,
         province:content.province,
       }
-      console.log(obj)
       this.$http.post('/mine/addads',{
           username:getUser(),
           obj
       }).then(res=>{
-          console.log(res)
           if(res){
             this.$router.push('/mine/address')
           }
@@ -92,7 +89,6 @@ export default {
                 username:getUser()
             }
         }).then(res=>{
-            console.log(res)
             this.adslength=(res.list.length)/2;
         })
     }

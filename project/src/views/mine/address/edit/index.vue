@@ -39,7 +39,6 @@ export default {
     },
     onSave(content) {
       Toast("save");
-      console.log(content)
       var obj={
         id:content.id,
         name:content.name,
@@ -57,7 +56,6 @@ export default {
           username:getUser(),
           obj
       }).then(res=>{
-          console.log(res)
           if(res.msg){
               Toast(res.msg)
               this.$router.push('/mine/address')
@@ -71,7 +69,6 @@ export default {
             id:this.$route.params.id
             }  
         }).then(res=>{
-          console.log(res)
             if(res){
                 this.$router.push('/mine/address')
             }
@@ -97,7 +94,6 @@ export default {
                 id:this.$route.params.id
             }
         }).then(res=>{
-            console.log(res)
             this.addressInfo=res.data
         })
     }

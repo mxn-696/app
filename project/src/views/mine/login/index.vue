@@ -31,7 +31,6 @@ export default {
           password: this.password,
         })
         .then((res) => {
-          console.log(res);
           if(res.success==1){
               setUser(this.username)
               this.$router.push({

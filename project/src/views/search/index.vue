@@ -71,7 +71,6 @@ export default {
             result.push(this.list[i])
           }
         }
-        console.log(result)
         return result
       }
   },
@@ -79,7 +78,6 @@ export default {
   methods: {
       getlist(){
           this.$http.get('/kind/all').then(res=>{
-              console.log(res)
               var list=[];
               for(var i=0;i<res.list.length;i++){
                   list.push({

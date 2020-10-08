@@ -83,7 +83,6 @@ app.get('/shop/getkind', (req, res) => {
 
 //上传图片
 app.post('/shop/upload', upload.single('avatar'), function (req, res, next) {
-  console.log(req.file)
   if (req.file) {
     res.json({
       code: 20000,
@@ -165,7 +164,6 @@ app.get('/shop/getthisshop/:id', async (req, res) => {
 
 // //修改对应id的生鲜信息
 app.put('/shop/putshop', (req, res) => {
-  // console.log(req.body)
   var beforeimg = null;
   Shop.findById(req.body.shopid).then(mon => {
     beforeimg = mon.imgUrl;
@@ -248,11 +246,9 @@ app.post('/login/upload', upload.single('avatar'), function (req, res, next) {
 
 //注册
 app.post('/mine/zhuce', (req, res) => {
-  console.log(req.body)
   User.find({
     username: req.body.username,
   }).then(mon => {
-    // console.log(mon)
     if (mon == "") {
       var user = new User({
         username: req.body.username,
@@ -361,20 +357,18 @@ app.post('/mine/addads', (req, res) => {
 })
 
 //获取当前收货地址
-app.get('/mine/getthisads',(req,res)=>{
-  // console.log(req.query)
+app.get('/mine/getthisads', (req, res) => {
   Ads.findOne({
-    username:req.query.username
-  }).then(mon=>{
-    // console.log(mon.list)
-    var data={}
-    for(var i =0;i<mon.list.length;i+=2){
-      if(mon.list[i].id==Number(req.query.id)){
-        data=mon.list[i]
+    username: req.query.username
+  }).then(mon => {
+    var data = {}
+    for (var i = 0; i < mon.list.length; i += 2) {
+      if (mon.list[i].id == Number(req.query.id)) {
+        data = mon.list[i]
       }
     }
     res.json({
-      code:200,
+      code: 200,
       data
     })
   })
@@ -417,13 +411,12 @@ app.put('/mine/putads', (req, res) => {
 
 //删除收货地址
 app.delete('/mine/delads', (req, res) => {
-  console.log(req.query)
   Ads.updateOne({
     username: req.query.username,
   }, {
     $pull: {
       list: {
-        id: Number(req.query.id) 
+        id: Number(req.query.id)
       }
     }
   }, function (err, res) {
@@ -432,24 +425,22 @@ app.delete('/mine/delads', (req, res) => {
     }
 
   }).then(mon => {
-    if(mon){
-        res.json({
-      code: 200,
-      msg: '地址删除成功'
-    })
+    if (mon) {
+      res.json({
+        code: 200,
+        msg: '地址删除成功'
+      })
     }
-  
+
   })
 })
 
 
 //获取用户全部收货地址
-app.get('/mine/allads',(req, res) => {
-  // console.log(req.query)
+app.get('/mine/allads', (req, res) => {
   Ads.findOne({
     username: req.query.username
   }).then(mon => {
-    // console.log(mon)
     res.json({
       code: 200,
       list: mon.list
@@ -458,6 +449,24 @@ app.get('/mine/allads',(req, res) => {
 })
 
 
+//获取购物车中对应id的信息
+app.get('/shopping/getthis', (req, res) => {
+  Car.findOne({
+    username: req.query.username
+  }).then(mon => {
+    var num=0;
+    for (var i = 0; i < mon.list.length; i+=2) {
+      if (mon.list[i].id == req.query.id) {
+        num=mon.list[i].num
+      }
+    }
+   res.json({
+     code:200,
+     num
+   })
+    
+  })
+})
 
 //购物车数据修改接口
 app.post('/shopping/add', (req, res) => {
@@ -467,21 +476,18 @@ app.post('/shopping/add', (req, res) => {
     flag = true;
     var pid = req.body.list[0].id;
     var num = req.body.list[0].num;
-    console.log(req.body.list[0].id)
-    console.log(num)
     for (var i = 0; i < aaa.list.length; i++) {
       if (req.body.list[0].id == aaa.list[i].id) {
         flag = false
       }
     }
     if (flag) {
-      console.log("a")
       Car.updateOne({
         username: req.body.username
       }, {
         $push: {
           list: {
-            id: pid,
+            id: pid, 
             num: num
           }
         }
@@ -497,7 +503,6 @@ app.post('/shopping/add', (req, res) => {
       })
     } else {
       if (num != 0) {
-        console.log("b")
         Car.updateOne({
           username: req.body.username,
           'list.id': pid
@@ -520,7 +525,6 @@ app.post('/shopping/add', (req, res) => {
           })
         })
       } else {
-        console.log("c")
         Car.updateOne({
           username: req.body.username
         }, {
@@ -533,7 +537,6 @@ app.post('/shopping/add', (req, res) => {
           if (err) {
             return console.log(err)
           }
-
         }).then(mon => {
           res.json({
             code: 200,
@@ -547,21 +550,24 @@ app.post('/shopping/add', (req, res) => {
 
 
 //获取购物车列表
-app.get('/shopping/getlist', (req, res) => {
-  console.log(req.query.username)
-  Car.findOne({
+app.get('/shopping/getlist', async (req, res) => {
+  var result = await Car.findOne({
     username: req.query.username
-  }).then(mon => {
-    var list = []
-    for (var i = 0; i < mon.list.length; i++) {
-      shop.findById(mon.list[i].id).then(aaa => {
-        list.push(aaa)
-      })
+  });
+  var list = [];
+  for (var i = 0; i < result.list.length; i += 2) {
+    var aaa= await Shop.findById(result.list[i].id);
+    var bbb=await Car.findOne({username:req.query.username})
+    for(var j=0;j<bbb.list.length;j+=2){
+      if(bbb.list[j].id==aaa._id){
+        aaa.__v=bbb.list[j].num
+      }
     }
-    res.json({
-      code: 200,
-      list: list
-    })
+    list.push(aaa)
+  }
+  res.json({
+    code:200,
+    list
   })
 })
 

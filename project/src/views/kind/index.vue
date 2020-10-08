@@ -1,11 +1,17 @@
 <template>
   <div id="main">
-    <van-nav-bar title="分类" left-text="返回" left-arrow @click-left="$router.go(-1)" >
-      <van-icon name="search" slot="right"  @click="$router.push('/search')"/>
+    <van-nav-bar
+      title="分类"
+      left-text="返回"
+      left-arrow
+      @click-left="$router.go(-1)"
+      class="top"
+    >
+      <van-icon name="search" slot="right" @click="$router.push('/search')" />
     </van-nav-bar>
     <div class="bottom">
-      <div class="left">
-        <van-sidebar v-model="activeKey">
+      <div class="left" id="floorNav">
+        <van-sidebar v-model="activeKey" @change="onChange">
           <van-sidebar-item
             v-for="(item, index) in leftList"
             :title="item.kind"
@@ -13,8 +19,8 @@
           />
         </van-sidebar>
       </div>
-      <div class="right">
-        <ul>
+      <div class="right bbb" @scroll="getactive()">
+        <ul id="content">
           <li v-for="(items, index) in rightList" :key="index">
             <p class="titel">{{ items.titel }}</p>
             <div class="right-main">
@@ -22,49 +28,11 @@
                 class="right-main-case"
                 v-for="(item, index) in items.list"
                 :key="index"
-                @click="$router.push('/dail/'+item._id)"
+                @click="$router.push('/dail/' + item._id)"
               >
                 <img :src="item.imgUrl[0]" alt="" />
                 <p>{{ item.name }}</p>
               </div>
-                <div
-                class="right-main-case"
-                v-for="(item, index) in items.list"
-                :key="index"
-                @click="$router.push('/dail/'+item._id)"
-              >
-                <img :src="item.imgUrl[0]" alt="" />
-                <p>{{ item.name }}</p>
-              </div>
-               <div
-                class="right-main-case"
-                v-for="(item, index) in items.list"
-                :key="index"
-                @click="$router.push('/dail/'+item._id)"
-              >
-                <img :src="item.imgUrl[0]" alt="" />
-                <p>{{ item.name }}</p>
-              </div>
-               <div
-                class="right-main-case"
-                v-for="(item, index) in items.list"
-                :key="index"
-                @click="$router.push('/dail/'+item._id)"
-              >
-                <img :src="item.imgUrl[0]" alt="" />
-                <p>{{ item.name }}</p>
-              </div>
-               <div
-                class="right-main-case"
-                v-for="(item, index) in items.list"
-                :key="index"
-                @click="$router.push('/dail/'+item._id)"
-              >
-                <img :src="item.imgUrl[0]" alt="" />
-                <p>{{ item.name }}</p>
-              </div>
-
-
             </div>
           </li>
         </ul>
@@ -74,6 +42,7 @@
 </template>
 
 <script>
+import $ from "jquery";
 export default {
   components: {},
   data() {
@@ -81,14 +50,18 @@ export default {
       activeKey: 0,
       leftList: [],
       rightList: {},
+      scrollList: [],
     };
   },
-  computed: {},
+  computed: {
+    
+  },
   watch: {},
   methods: {
-    onClickRight() {
-
+    onChange(index) {
+      $(".bbb").scrollTop(this.scrollList[index]);
     },
+    onClickRight() {},
     getkind() {
       this.$http.get("/kind/getkind").then((res) => {
         this.leftList = res.Kindlist;
@@ -112,14 +85,33 @@ export default {
           }
         }
         this.rightList = rightList;
-      });
+        var scrollList = [];
+        this.$nextTick(function () {
+          $("#content li").each(function () {
+            scrollList.push($(this).offset().top - 46);
+          });
+          this.scrollList = scrollList;
+          console.log(this.scrollList)
+        });
+      })
+      ;
     },
+    getactive(){
+      for(var i=0;i<this.scrollList.length;i++){
+        if($(".bbb").scrollTop()>=this.scrollList[i]&&$(".bbb").scrollTop()<this.scrollList[i+1]){
+          this.activeKey=i
+        }
+        
+      }
+    }
   },
   created() {
     this.getkind();
     this.getlist();
   },
-  mounted() {},
+  mounted() {
+
+  },
   beforeCreate() {},
   beforeMount() {},
   beforeUpdate() {},
@@ -132,15 +124,14 @@ export default {
 <style lang='scss' scoped>
 #main {
   .bottom {
-    height: 100%;
     display: flex;
+    height: calc(100% - 46px);
     .left {
       overflow: auto;
     }
     .right {
       flex: 1;
       overflow-y: auto;
-      
       .titel {
         font-size: 0.2rem;
         font-weight: 800;

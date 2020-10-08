@@ -61,7 +61,6 @@ export default {
               username:getUser()
             }
           }).then(res=>{
-            console.log(res)
             this.imgUrl=this.Url+res.list.imgUrl
           })
         }

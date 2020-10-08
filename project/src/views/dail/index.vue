@@ -3,17 +3,8 @@
     <div class="case">
       <div class="banner">
         <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
-          <van-swipe-item>
-            <img src="" alt="" />
-          </van-swipe-item>
-          <van-swipe-item>
-            <img src="" alt="" />
-          </van-swipe-item>
-          <van-swipe-item>
-            <img src="" alt="" />
-          </van-swipe-item>
-          <van-swipe-item>
-            <img src="" alt="" />
+          <van-swipe-item v-for="(item, index) in imgList" :key="index">
+            <img :src="item" alt="" />
           </van-swipe-item>
         </van-swipe>
         <span class="back iconfont icon-fanhui" @click="$router.back()"></span>
@@ -23,26 +14,23 @@
           <img :src="info.hot" @click="$router.openPage(info.hotLink)" alt="">
         </div> -->
         <div class="title-box">
-          <h3>红米5</h3>
-          <p style="color: #ff4a00">
-            【手机品牌日：赠送耳机，可享小米分期最高6期免息】
-          </p>
+          <h3>{{ data.title }}</h3>
           <p style="color: #757575">
-            千元全面屏 / 4000mAh大电量 / 前置柔光自拍 / 14nm骁龙八核处理器
+            {{ data.detial }}
           </p>
           <div class="press">
-            <span class="money">￥1299</span>
+            <span class="money">￥{{ data.price }}</span>
           </div>
         </div>
       </div>
       <div class="xuanze">
-<mt-cell title="已选" is-link class="aaa"> 红米5 Plus 4GB+64GB 金色 x1</mt-cell>
-<mt-cell title="送至" is-link > 北京市东城区</mt-cell>
-
+        <mt-cell title="已选" is-link class="aaa">
+          红米5 Plus 4GB+64GB 金色 x1</mt-cell
+        >
+        <mt-cell title="送至" is-link> 北京市东城区</mt-cell>
       </div>
       <div class="peijian">
-<mt-cell title="配件" is-link ></mt-cell>
-
+        <mt-cell title="配件" is-link></mt-cell>
       </div>
     </div>
     <div class="detail-footer">
@@ -58,14 +46,6 @@
             <span class="iconfont icon-gouwuche"></span>
           </p>
           <p class="name">购物车</p>
-          <!-- <span
-            class="num"
-            v-show="getShopCarLength > 0"
-            :class="{ full: parseInt(getShopCarLength) >= 99 }"
-            >{{
-              parseInt(getShopCarLength) >= 99 ? "99+" : getShopCarLength
-            }}</span
-          > -->
         </div>
       </div>
       <div class="right-box shop-car" @click="addShopCar">加入购物车</div>
@@ -74,17 +54,80 @@
 </template>
 
 <script>
+import { getUser } from "@/utils/auth";
+import { Toast } from "vant";
 export default {
   components: {},
   data() {
-    return {};
+    return {
+      imgList: [],
+      num: 0,
+      data: {
+        title: "红米5",
+        detial:
+          "千元全面屏 / 4000mAh大电量 / 前置柔光自拍 / 14nm骁龙八核处理器",
+        price: 1299,
+      },
+    };
   },
   computed: {},
   watch: {},
   methods: {
-    addShopCar() {},
+    getthisshop() {
+      this.$http.get("/main/getthis/" + this.$route.params.id).then((res) => {
+        var imgList = res.list.imgUrl;
+        for (var i = 0; i < imgList.length; i++) {
+          imgList[i] = "http://127.0.0.1:3000/" + imgList[i];
+        }
+        this.imgList = imgList;
+        var obj = {
+          title: res.list.name,
+          detial: res.list.detial,
+          price: res.list.price,
+        };
+        this.data = obj;
+      });
+    },
+    addShopCar() {
+      if (!getUser()) {
+        Toast("还没有登录，请先登录");
+        this.$router.push('/mine/login')
+      } else {
+        this.num++;
+        this.$http
+          .post("/shopping/add", {
+            username: getUser(),
+            list: [
+              {
+                num: this.num,
+                id: this.$route.params.id,
+              },
+            ],
+          })
+          .then((res) => {
+            console.log(res);
+          });
+      }
+    },
+    getnum() {
+      if (getUser()) {
+        this.$http
+          .get("/shopping/getthis", {
+            params: {
+              username: getUser(),
+              id: this.$route.params.id,
+            },
+          })
+          .then((res) => {
+            this.num = res.num;
+          });
+      }
+    },
   },
-  created() {},
+  created() {
+    this.getthisshop();
+    this.getnum();
+  },
   mounted() {},
   beforeCreate() {},
   beforeMount() {},
@@ -97,7 +140,7 @@ export default {
 </script>
 <style lang='scss' scoped>
 #main {
-//   height: 100%;
+  //   height: 100%;
   display: flex;
   flex-direction: column;
   .case {
@@ -157,14 +200,13 @@ export default {
   }
 }
 
-.xuanze{
-    border-top: 0.1rem solid #eee;
-    border-bottom: 0.1rem solid #eee;
-    .aaa{
-        border-bottom: 1px solid #eee;
-    }
+.xuanze {
+  border-top: 0.1rem solid #eee;
+  border-bottom: 0.1rem solid #eee;
+  .aaa {
+    border-bottom: 1px solid #eee;
+  }
 }
-
 
 .detail-footer {
   display: flex;
