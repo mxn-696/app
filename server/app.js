@@ -125,12 +125,13 @@ app.get('/shop/getlist', async (req, res) => {
 app.delete('/shop/delshop/:id', (req, res) => {
   Shop.findByIdAndDelete(req.params.id).then(mon => {
     if (mon) {
-      var filepath = mon.imgUrl;
-      fs.unlink(filepath, (err) => {
+      for(var i=0;i<mon.imgUrl.length;i++){
+        fs.unlink(mon.imgUrl[i], (err) => {
         if (err) {
           console.log(err)
         }
       })
+      }
       res.json({
         code: 20000,
         msg: '删除数据成功'
@@ -297,11 +298,19 @@ app.post('/mine/login', (req, res) => {
     password: req.body.password
   }).then(mon => {
     if (mon != "") {
-      res.json({
+      Ads.findOne({
+        username: req.body.username
+      }).then(aaa=>{
+        if(aaa){
+          res.json({
         code: 200,
         success: 1,
+        address:aaa.list[0],
         msg: '登录成功'
       })
+        }
+      })
+      
     } else {
       res.json({
         code: 200,
@@ -311,6 +320,8 @@ app.post('/mine/login', (req, res) => {
     }
   })
 })
+
+//获取头像
 app.get('/mine/gettouxiang', (req, res) => {
   User.findOne({
     username: req.query.username

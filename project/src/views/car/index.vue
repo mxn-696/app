@@ -128,7 +128,7 @@
       </div>
     </div>
 
-    <div class="car-footer" v-show="shopCarList.length > 0">
+    <div class="car-footer" >
       <div class="item money">
         <p>共{{ shopCarList.length }}件<span>金额</span></p>
         <p>

@@ -10,9 +10,6 @@
         <span class="back iconfont icon-fanhui" @click="$router.back()"></span>
       </div>
       <div class="content">
-        <!-- <div class="hot">
-          <img :src="info.hot" @click="$router.openPage(info.hotLink)" alt="">
-        </div> -->
         <div class="title-box">
           <h3>{{ data.title }}</h3>
           <p style="color: #757575">
@@ -25,9 +22,9 @@
       </div>
       <div class="xuanze">
         <mt-cell title="已选" is-link class="aaa">
-          红米5 Plus 4GB+64GB 金色 x1</mt-cell
+          {{data.title}} x1</mt-cell
         >
-        <mt-cell title="送至" is-link> 北京市东城区</mt-cell>
+        <mt-cell title="送至" is-link @click.native="aaa"> {{address}}</mt-cell>
       </div>
       <div class="peijian">
         <mt-cell title="配件" is-link></mt-cell>
@@ -54,7 +51,7 @@
 </template>
 
 <script>
-import { getUser } from "@/utils/auth";
+import { getUser,getAds } from "@/utils/auth";
 import { Toast } from "vant";
 export default {
   components: {},
@@ -68,6 +65,7 @@ export default {
           "千元全面屏 / 4000mAh大电量 / 前置柔光自拍 / 14nm骁龙八核处理器",
         price: 1299,
       },
+      address:''
     };
   },
   computed: {},
@@ -104,9 +102,7 @@ export default {
               },
             ],
           })
-          .then((res) => {
-            console.log(res);
-          });
+         
       }
     },
     getnum() {
@@ -123,10 +119,17 @@ export default {
           });
       }
     },
+    aaa(){
+      this.$router.push({
+        path:'/mine/address/list',
+      })
+    }
   },
   created() {
     this.getthisshop();
     this.getnum();
+    this.address=getAds()
+    
   },
   mounted() {},
   beforeCreate() {},

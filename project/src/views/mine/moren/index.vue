@@ -3,13 +3,13 @@
     <div class="user-box public-padding">
       <div class="face-book">
         <img
-          @click="$router.push('/mine/login')"
+          @click="tiaozhuan"
           :src='imgUrl'
           alt=""
         class="touxiang"
         />
       </div>
-      <p class="fl" @click="$router.push('/mine/login')">{{login}}</p>
+      <p class="fl" @click="tiaozhuan">{{login}}</p>
     </div>
 
     <mt-cell title="我的订单"  is-link class="dingdan"> </mt-cell>
@@ -63,6 +63,13 @@ export default {
           }).then(res=>{
             this.imgUrl=this.Url+res.list.imgUrl
           })
+        }
+      },
+      tiaozhuan(){
+        if(getUser()){
+          this.$router.push('/mine/shezhi')
+        }else{
+          this.$router.push('/mine/login')
         }
       }
     },

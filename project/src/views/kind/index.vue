@@ -14,7 +14,7 @@
         <van-sidebar v-model="activeKey" @change="onChange">
           <van-sidebar-item
             v-for="(item, index) in leftList"
-            :title="item.kind"
+            :title="item"
             :key="index"
           />
         </van-sidebar>
@@ -62,16 +62,11 @@ export default {
       $(".bbb").scrollTop(this.scrollList[index]);
     },
     onClickRight() {},
-    getkind() {
-      this.$http.get("/kind/getkind").then((res) => {
-        this.leftList = res.Kindlist;
-      });
-    },
     getlist() {
       this.$http.get("/kind/all").then((res) => {
-        // console.log(res)
         var list = res.list;
         var rightList = {};
+        var leftList=[]
         for (var i = 0; i < list.length; i++) {
           var a = String(list[i].kind.kind);
           // console.log(a)
@@ -83,7 +78,11 @@ export default {
           } else {
             rightList[a].list.push(list[i]);
           }
+          if(leftList.indexOf(a)==-1){
+            leftList.push(a)
+          }
         }
+        this.leftList=leftList
         this.rightList = rightList;
         var scrollList = [];
         this.$nextTick(function () {
@@ -91,7 +90,6 @@ export default {
             scrollList.push($(this).offset().top - 46);
           });
           this.scrollList = scrollList;
-          console.log(this.scrollList)
         });
       })
       ;
@@ -106,7 +104,6 @@ export default {
     }
   },
   created() {
-    this.getkind();
     this.getlist();
   },
   mounted() {

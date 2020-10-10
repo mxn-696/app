@@ -6,7 +6,6 @@
         left-text="返回"
         left-arrow
         @click-left="onClickLeft"
-        @click-right="onClickRight"
       />
       <van-address-list
         v-model="chosenAddressId"
@@ -14,6 +13,7 @@
         default-tag-text="默认"
         @add="onAdd"
         @edit="onEdit"
+        @select="choseads"
       />
     </div>
   </div>
@@ -21,7 +21,7 @@
 
 <script>
 import { Toast } from "vant";
-import{getUser}from '@/utils/auth'
+import{getUser,setAds}from '@/utils/auth'
 export default {
   components: {},
   data() {
@@ -66,9 +66,6 @@ export default {
       Toast("返回");
       this.$router.replace({path:'/mine/shezhi'});
     },
-    onClickRight() {
-      Toast("按钮");
-    },
     getadslist(){
         this.$http.get('/mine/allads',{
             params:{
@@ -84,19 +81,30 @@ export default {
             }
             this.list=adslist
         })
+    },
+    choseads(item){
+      setAds(item.address)
+      this.$router.back()
     }
   },
   created() {
       this.getadslist()
   },
   mounted() {},
-  beforeCreate() {},
+  beforeCreate() {}, 
   beforeMount() {},
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
   destroyed() {},
   activated() {},
+   beforeRouteEnter(to,from,next){
+    if(getUser()){
+      next()
+    }else{
+      next('/mine/login')
+    }
+   }
 };
 </script>
 <style lang='scss' scoped>

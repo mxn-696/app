@@ -131,13 +131,11 @@ export default {
     },
     // 上传图片
     uploadImage(image) {
-      console.log(image)
       const formdata = new FormData()
       formdata.append('avatar', image.file)
       this.$store.dispatch('shop/upload', formdata).then((res) => {
         console.log(res)
         this.imgList.push(res.imgUrl)
-        console.log(this.imgList)
       })
     },
     // 重置表单

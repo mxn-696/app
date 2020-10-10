@@ -38,18 +38,21 @@
           style="width: 400px"
         />
       </el-form-item>
-      <el-form-item label="电影图">
+      <el-form-item label="商品信息图">
         <el-upload
-          class="avatar-uploader"
           action="aaa"
+          list-type="picture-card"
           :http-request="uploadImage"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
+          :on-preview="handlePictureCardPreview"
+          :on-remove="handleRemove"
         >
-          <img v-if="imgUrl" :src="imgUrl" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon" />
+          <i class="el-icon-plus" />
         </el-upload>
+        <el-dialog
+          :visible.sync="dialogVisible"
+        >
+          <img width="100%" :src="imgUrl[0]" alt="">
+        </el-dialog>
       </el-form-item>
 
       <el-form-item>
@@ -67,6 +70,7 @@ export default {
     return {
       imgUrl: '',
       labelPosition: 'top',
+      dialogVisible: false,
       shop: {
         name: '',
         price: '',
@@ -103,34 +107,55 @@ export default {
         this.shop.kind = res.thisKind.kind
         this.Kindlist = res.Kindlist
         this.imgUrl = res.list.imgUrl
+        console.log(this.imgUrl)
       })
     },
 
-    // 上传图片限制
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw)
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg'
-      const isLt2M = file.size / 1024 / 1024 < 2
+    // // 上传图片限制
+    // handleAvatarSuccess(res, file) {
+    //   this.imageUrl = URL.createObjectURL(file.raw)
+    // },
+    // beforeAvatarUpload(file) {
+    //   const isJPG = file.type === 'image/jpeg'
+    //   const isLt2M = file.size / 1024 / 1024 < 2
 
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!')
-      }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
-      }
-      return isJPG && isLt2M
-    },
+    //   if (!isJPG) {
+    //     this.$message.error('上传头像图片只能是 JPG 格式!')
+    //   }
+    //   if (!isLt2M) {
+    //     this.$message.error('上传头像图片大小不能超过 2MB!')
+    //   }
+    //   return isJPG && isLt2M
+    // },
 
+    // // 上传图片
+    // uploadImage(image) {
+    //   const formdata = new FormData()
+    //   formdata.append('avatar', image.file)
+    //   this.$store.dispatch('shop/upload', formdata).then(res => {
+    //     this.imgUrl = res.imgUrl
+    //   })
+    // },
+
+    handleRemove(file, fileList) {
+      console.log(file, fileList)
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url
+      this.dialogVisible = true
+    },
     // 上传图片
     uploadImage(image) {
+      console.log(image)
       const formdata = new FormData()
       formdata.append('avatar', image.file)
-      this.$store.dispatch('shop/upload', formdata).then(res => {
-        this.imgUrl = res.imgUrl
+      this.$store.dispatch('shop/upload', formdata).then((res) => {
+        console.log(res)
+        this.imgList.push(res.imgUrl)
+        console.log(this.imgList)
       })
     },
+
     // 重置表单
     chongzhi() {
       this.imgUrl = ''

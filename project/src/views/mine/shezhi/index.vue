@@ -9,7 +9,7 @@
         <mt-cell title="我的地址" is-link @click.native="site">
           <span style="color: green"></span>
         </mt-cell>
-        <input type="submit" value="退出登录" @click="loginout" />
+        <input type="submit" value="退出登录" @click="loginout" class="tuichu"/>
       </div>
 </div>
 </template>
@@ -53,10 +53,10 @@ export default {
    destroyed() {},
    activated() {},
   beforeRouteEnter(to,from,next){
-    if(getUser()){
-      next()
-    }else{
+    if(!getUser()){
       next('/mine/login')
+    }else{
+      next()
     }
    }
 }
@@ -78,5 +78,8 @@ export default {
   text-align: center;
   font-weight: 700;
   padding-bottom: 20px;
+}
+.tuichu{
+  color: white;
 }
 </style>

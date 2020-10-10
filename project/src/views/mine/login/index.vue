@@ -12,7 +12,7 @@
 
 <script>
 import { Toast } from 'vant';
-import {setUser,getUser} from '@/utils/auth'
+import {setUser,getUser,setAds} from '@/utils/auth'
 export default {
   components: {},
   data() {
@@ -32,7 +32,10 @@ export default {
         })
         .then((res) => {
           if(res.success==1){
-              setUser(this.username)
+            console.log(res)
+            var address=res.address.province+res.address.city+res.address.county+res.address.addressDetail
+            setAds(address)
+              setUser(this.username),
               this.$router.push({
                   path:'/mine',
               })
